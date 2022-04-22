@@ -1,0 +1,28 @@
+{
+  "expenses": {
+    "2022": {
+      "04": [
+        {
+          "id": 1,
+          "category": "fruits",
+          "cat_id": 1
+        },
+        {
+          "id": 1,
+          "category": "biscuits",
+          "cat_id": 1
+        },
+        {
+          "id": 1,
+          "category": "vegetables",
+          "cat_id": 1
+        },
+        {
+          "id": 1,
+          "category": "water",
+          "cat_id": 3
+        }
+      ]
+    }
+  }
+}
