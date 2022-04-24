@@ -13,11 +13,9 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Tooltip,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { makeStyles } from "@mui/styles";
-import AddIcon from "@mui/icons-material/Add";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 type Props = {};
@@ -70,15 +68,6 @@ export default function Header({}: Props) {
           </Typography>
           {session && (
             <div>
-              <Tooltip title="Create post">
-                <IconButton
-                  aria-label="create post"
-                  color="inherit"
-                  onClick={() => router.push("/create")}
-                >
-                  <AddIcon />
-                </IconButton>
-              </Tooltip>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
