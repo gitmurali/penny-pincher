@@ -5,6 +5,7 @@ import {
   where,
   onSnapshot,
   addDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { db } from "../../firebase";
@@ -19,9 +20,10 @@ import {
   SelectChangeEvent,
   TextField,
   Typography,
+  Snackbar,
 } from "@mui/material";
-import { signIn, useSession } from "next-auth/react";
-
+import { useSession } from "next-auth/react";
+import Notification from "./Notification";
 interface IFormInput {
   name: string;
   type_id: string;
@@ -32,6 +34,7 @@ type Props = {};
 export default function Categories({}: Props) {
   const [types, setTypes] = useState<any>([]);
   const [selectedType, setSelectedType] = useState("");
+  const [open, setOpen] = useState(false);
   const {
     register,
     formState: { errors },
@@ -46,14 +49,15 @@ export default function Categories({}: Props) {
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedType(event.target.value);
   };
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     data.type_id = `/types/${data.type_id}`;
     await addDoc(collection(db, "categories"), {
       ...data,
-      timestamp: new Date().toUTCString(),
+      timestamp: serverTimestamp(),
     });
 
-    console.log("data successfully added.");
+    setOpen(true);
   };
 
   const fetchTypes = async () => {
@@ -131,6 +135,12 @@ export default function Categories({}: Props) {
           </Button>
         </Grid>
       </form>
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        severity="success"
+        message="Category created successfully"
+      />
     </Container>
   ) : null;
 }

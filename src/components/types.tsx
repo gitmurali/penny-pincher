@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Container, Grid, TextField, Typography } from "@mui/material";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { signIn, useSession } from "next-auth/react";
+import Notification from "./Notification";
 
 type Props = {};
 
@@ -18,6 +19,7 @@ export default function Types({}: Props) {
     handleSubmit,
   } = useForm<IFormInput>();
   const { data: session, status } = useSession();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") signIn();
@@ -27,7 +29,7 @@ export default function Types({}: Props) {
     if (data?.name !== "") {
       const newTypeRef = doc(collection(db, "types"));
       await setDoc(newTypeRef, data);
-      console.log('successfully added"');
+      setOpen(true);
     }
   };
   return session ? (
@@ -61,6 +63,12 @@ export default function Types({}: Props) {
           </Button>
         </Grid>
       </form>
+      <Notification
+        open={open}
+        setOpen={setOpen}
+        severity="success"
+        message="Type created successfully"
+      />
     </Container>
   ) : null;
 }
