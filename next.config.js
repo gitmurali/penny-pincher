@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
   env: {
     FIRE_API_KEY: process.env.FIRE_API_KEY,
     FIRE_AUTH_DOMAIN: process.env.FIRE_AUTH_DOMAIN,

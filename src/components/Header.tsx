@@ -115,7 +115,7 @@ export default function Header({}: Props) {
               <ListItem
                 button
                 onClick={() => {
-                  router.push("/dashboard");
+                  router.push("/");
                   setIsDrawerOpen(false);
                 }}
               >
