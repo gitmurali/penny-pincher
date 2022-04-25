@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { db } from "../../firebase";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import ExpensesChart from "./ExpensesChart";

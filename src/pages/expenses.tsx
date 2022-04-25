@@ -25,12 +25,16 @@ import {
 } from "@mui/material";
 import { useSession } from "next-auth/react";
 import Notification from "../components/Notification";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 interface IFormInput {
   price: string;
   quantity: string;
   currency: string;
   cat_id: string;
+  expenseDate: Date | null;
 }
 
 type Props = {};
@@ -43,6 +47,7 @@ const Locale = {
 
 export default function Expenses({}: Props) {
   const [cats, setCats] = useState<any>([]);
+  const [value, setValue] = useState<Date | null>();
   const [open, setOpen] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const {
@@ -57,28 +62,15 @@ export default function Expenses({}: Props) {
   }, []);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    // {
-    //     "currency": "USD",
-    //     "cat_id": "GONZpPW1TfVkjqr9pGll",
-    //     "price": "12",
-    //     "quantity": "2"
-    // }
     const { currency, cat_id, price, quantity } = data;
-    console.log("bobby", {
-      cat_id: doc(db, "categories/" + cat_id),
-      currency,
-      locale: Locale[currency as keyof typeof Locale],
-      price,
-      quantity,
-      timestamp: serverTimestamp(),
-      user_id: doc(db, "users/exSHPC34bdhWtgxwyZsX"),
-    });
+
     await addDoc(collection(db, "expenses"), {
       cat_id: doc(db, "categories/" + cat_id),
       currency,
       locale: Locale[currency as keyof typeof Locale],
       price,
       quantity,
+      expenseDate: value,
       timestamp: serverTimestamp(),
       user_id: doc(db, "users/exSHPC34bdhWtgxwyZsX"),
     });
@@ -149,6 +141,26 @@ export default function Expenses({}: Props) {
                 ))}
               </TextField>
             </FormControl>
+          </Grid>
+          <Grid item>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DesktopDatePicker
+                label="Date of expense"
+                value={value}
+                minDate={new Date("2017-01-01")}
+                onChange={(newValue) => {
+                  setValue(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    inputProps={register("expenseDate", {
+                      required: "Please select expense",
+                    })}
+                    {...params}
+                  />
+                )}
+              />
+            </LocalizationProvider>
           </Grid>
           <Grid item>
             <TextField
