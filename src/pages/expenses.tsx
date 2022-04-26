@@ -55,7 +55,7 @@ export default function Expenses({}: Props) {
     formState: { errors },
     handleSubmit,
   } = useForm<IFormInput>();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     console.log(fetchCategories());
@@ -63,7 +63,6 @@ export default function Expenses({}: Props) {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { currency, cat_id, price, quantity } = data;
-
     await addDoc(collection(db, "expenses"), {
       cat_id: doc(db, "categories/" + cat_id),
       currency,
@@ -94,7 +93,6 @@ export default function Expenses({}: Props) {
     return unsubscribe;
   };
 
-  console.log(cats, selectedType);
   return session ? (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -152,12 +150,7 @@ export default function Expenses({}: Props) {
                   setValue(newValue);
                 }}
                 renderInput={(params) => (
-                  <TextField
-                    inputProps={register("expenseDate", {
-                      required: "Please select expense",
-                    })}
-                    {...params}
-                  />
+                  <TextField inputProps={register("expenseDate")} {...params} />
                 )}
               />
             </LocalizationProvider>

@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { db } from "../../firebase";
-import { collection, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
+
 import ExpensesChart from "./ExpensesChart";
 
 export default function Dashboard() {
@@ -12,8 +19,13 @@ export default function Dashboard() {
   useEffect(() => {
     setExpenses([]);
     const fetchExpenses = async () => {
-      (await getDocs(collection(db, "expenses"))).forEach(async (doc) => {
+      const expensesRef = collection(db, "expenses");
+      const q = query(expensesRef, orderBy("expenseDate", "asc"));
+      (await getDocs(q)).forEach(async (doc) => {
         let newItem: any = { id: doc.id, ...doc.data() };
+        if (newItem?.expenseDate) {
+          newItem.expenseDate = doc.data().expenseDate.toDate();
+        }
         if (newItem?.cat_id) {
           let category: any = await getDoc(newItem?.cat_id);
           if (category.exists()) {
@@ -30,6 +42,7 @@ export default function Dashboard() {
     return <p>Loading...</p>;
   }
 
+  console.log("bobbs", expenses);
   return (
     <>
       {session ? (

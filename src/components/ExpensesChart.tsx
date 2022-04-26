@@ -1,9 +1,32 @@
 import React from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Pie } from "react-chartjs-2";
-import { Grid, Paper, Typography, Box } from "@mui/material";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+} from "chart.js";
+import { Bar, Pie } from "react-chartjs-2";
+import {
+  Grid,
+  Paper,
+  Typography,
+  Box,
+  toggleButtonClasses,
+} from "@mui/material";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title
+);
 
 type Props = {
   data: any;
@@ -14,18 +37,59 @@ export default function ExpensesChart({ data }: Props) {
     plugins: {
       maintainAspectRatio: false,
       legend: {
-        display: false,
+        display: true,
+      },
+      title: {
+        display: true,
+        text: "Total expenses",
       },
     },
   };
+  const barOptions = {
+    plugins: {
+      maintainAspectRatio: false,
+      legend: {
+        display: true,
+      },
+      title: {
+        display: true,
+        text: "Total expenses by Month",
+      },
+    },
+  };
+  const labels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "June",
+    "July",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const expensesByMonth = () => {
+    const totalByMonth: any[] = new Array(11).fill(0);
+    if (data) {
+      Object.keys({ ...labels }).map((month) => {
+        data.map((expense: any) => {
+          if (new Date(expense?.expenseDate).getMonth() === +month) {
+            totalByMonth[+month] += +expense.price;
+          }
+        });
+      });
+    }
+    return totalByMonth;
+  };
+
   const pieData = {
     labels: data.map((item: any) => item.category.name),
     datasets: [
       {
-        label: "expenses",
-        options: {
-          responsive: true,
-        },
         data: data.map((item: any) => item.price),
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
@@ -47,23 +111,45 @@ export default function ExpensesChart({ data }: Props) {
       },
     ],
   };
+  console.log(expensesByMonth());
+  const barData = {
+    labels,
+    datasets: [
+      {
+        label: "Expense",
+        data: expensesByMonth(),
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+      },
+    ],
+  };
+
   return (
-    <Paper elevation={3} sx={{ mt: 3, width: 350 }}>
-      <Box
-        sx={{
-          height: 350,
-          p: 3,
-        }}
-      >
-        <Grid container direction="column">
-          <Grid item xs={6}>
-            <Typography variant="h5">Total Expenses</Typography>
-          </Grid>
-          <Grid item xs={6}>
+    <Grid container spacing={1}>
+      <Grid item xs={4}>
+        <Paper elevation={3} sx={{ mt: 3 }}>
+          <Box
+            sx={{
+              height: 500,
+              p: 3,
+            }}
+          >
             <Pie data={pieData} options={options} style={{ marginTop: 10 }} />
-          </Grid>
-        </Grid>
-      </Box>
-    </Paper>
+          </Box>
+        </Paper>
+      </Grid>
+      <Grid item xs={8}>
+        <Paper elevation={3} sx={{ mt: 3 }}>
+          <Box
+            sx={{
+              height: 500,
+              p: 3,
+            }}
+          >
+            <Bar options={barOptions} data={barData} width={600} height={250} />
+            ;
+          </Box>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 }

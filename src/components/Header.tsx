@@ -50,7 +50,7 @@ export default function Header({}: Props) {
   };
 
   return (
-    <div className={classes.root}>
+    <div>
       <AppBar position="static" color="inherit">
         <Toolbar>
           <IconButton
