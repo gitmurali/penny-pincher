@@ -111,7 +111,7 @@ export default function ExpensesChart({ data }: Props) {
       },
     ],
   };
-  console.log(expensesByMonth());
+
   const barData = {
     labels,
     datasets: [

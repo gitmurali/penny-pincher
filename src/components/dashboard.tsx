@@ -10,6 +10,8 @@ import {
 } from "firebase/firestore";
 
 import ExpensesChart from "./ExpensesChart";
+import ExpensesGrid from "./ExpensesGrid";
+import { Typography } from "@mui/material";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -42,12 +44,12 @@ export default function Dashboard() {
     return <p>Loading...</p>;
   }
 
-  console.log("bobbs", expenses);
   return (
     <>
       {session ? (
         <>
           <ExpensesChart data={expenses} />
+          <ExpensesGrid data={expenses} />
         </>
       ) : (
         <p>
