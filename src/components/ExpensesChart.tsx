@@ -37,7 +37,7 @@ export default function ExpensesChart({ data }: Props) {
     plugins: {
       maintainAspectRatio: false,
       legend: {
-        display: true,
+        display: false,
       },
       title: {
         display: true,
@@ -49,7 +49,7 @@ export default function ExpensesChart({ data }: Props) {
     plugins: {
       maintainAspectRatio: false,
       legend: {
-        display: true,
+        display: false,
       },
       title: {
         display: true,
@@ -133,7 +133,9 @@ export default function ExpensesChart({ data }: Props) {
               p: 3,
             }}
           >
-            <Pie data={pieData} options={options} style={{ marginTop: 10 }} />
+            <div style={{ height: "500px", width: "500px", margin: "0 auto" }}>
+              <Pie data={pieData} options={options} style={{ marginTop: 10 }} />
+            </div>
           </Box>
         </Paper>
       </Grid>
@@ -145,8 +147,7 @@ export default function ExpensesChart({ data }: Props) {
               p: 3,
             }}
           >
-            <Bar options={barOptions} data={barData} width={600} height={250} />
-            ;
+            <Bar options={barOptions} data={barData} width={550} height={200} />
           </Box>
         </Paper>
       </Grid>
