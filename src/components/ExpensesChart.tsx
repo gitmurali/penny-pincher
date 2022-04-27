@@ -124,31 +124,15 @@ export default function ExpensesChart({ data }: Props) {
   };
 
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} alignItems="center">
       <Grid item xs={4}>
-        <Paper elevation={3} sx={{ mt: 3 }}>
-          <Box
-            sx={{
-              height: 500,
-              p: 3,
-            }}
-          >
-            <div style={{ height: "500px", width: "500px", margin: "0 auto" }}>
-              <Pie data={pieData} options={options} style={{ marginTop: 10 }} />
-            </div>
-          </Box>
+        <Paper elevation={3} sx={{ mt: 3, p: 2 }}>
+          <Pie data={pieData} options={options} style={{ marginTop: 10 }} />
         </Paper>
       </Grid>
       <Grid item xs={8}>
-        <Paper elevation={3} sx={{ mt: 3 }}>
-          <Box
-            sx={{
-              height: 500,
-              p: 3,
-            }}
-          >
-            <Bar options={barOptions} data={barData} width={550} height={200} />
-          </Box>
+        <Paper elevation={3} sx={{ mt: 3, p: 2 }}>
+          <Bar options={barOptions} data={barData} width={550} height={200} />
         </Paper>
       </Grid>
     </Grid>
