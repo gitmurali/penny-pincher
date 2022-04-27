@@ -58,7 +58,7 @@ export default function Expenses({}: Props) {
   const { data: session } = useSession();
 
   useEffect(() => {
-    console.log(fetchCategories());
+    // console.log(fetchCategories());
   }, []);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {

@@ -43,7 +43,7 @@ export default function Categories({}: Props) {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    console.log(fetchTypes());
+    // console.log(fetchTypes());
   }, []);
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -76,7 +76,7 @@ export default function Categories({}: Props) {
     return unsubscribe;
   };
 
-  console.log(selectedType);
+  // console.log(selectedType);
   return session ? (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
