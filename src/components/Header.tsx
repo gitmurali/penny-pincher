@@ -141,7 +141,15 @@ export default function Header({}: Props) {
               >
                 <ListItemText primary="Types" />
               </ListItem>
-
+              <ListItem
+                button
+                onClick={() => {
+                  router.push("/income");
+                  setIsDrawerOpen(false);
+                }}
+              >
+                <ListItemText primary="Income" />
+              </ListItem>
               <ListItem
                 button
                 onClick={() => {
