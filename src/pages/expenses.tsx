@@ -28,6 +28,7 @@ import Notification from "../components/Notification";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { useUserData } from "../hooks/useUserData";
 
 interface IFormInput {
   price: string;
@@ -56,6 +57,7 @@ export default function Expenses({}: Props) {
     handleSubmit,
   } = useForm<IFormInput>();
   const { data: session } = useSession();
+  const { userData } = useUserData();
 
   useEffect(() => {
     fetchCategories();
@@ -71,7 +73,7 @@ export default function Expenses({}: Props) {
       quantity,
       expenseDate: value,
       timestamp: serverTimestamp(),
-      user_id: doc(db, "users/exSHPC34bdhWtgxwyZsX"),
+      user_id: doc(db, `users/${userData.id}`),
     });
 
     setOpen(true);

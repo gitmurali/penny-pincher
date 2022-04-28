@@ -30,9 +30,10 @@ ChartJS.register(
 
 type Props = {
   data: any;
+  userData: any;
 };
 
-export default function ExpensesChart({ data }: Props) {
+export default function ExpensesChart({ data, userData }: Props) {
   const options = {
     plugins: {
       maintainAspectRatio: false,

@@ -77,7 +77,7 @@ export default function Dashboard() {
       {session ? (
         expenses.length > 0 ? (
           <>
-            <ExpensesChart data={expenses} />
+            <ExpensesChart data={expenses} userData={userData} />
             <ExpensesGrid data={expenses} />
           </>
         ) : (
