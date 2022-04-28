@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Container, Grid, TextField, Typography } from "@mui/material";
-import { collection, doc, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import { signIn, useSession } from "next-auth/react";
 import Notification from "./Notification";
+import { useUserData } from "../hooks/useUserData";
 
 type Props = {};
 
@@ -20,15 +27,19 @@ export default function Types({}: Props) {
   } = useForm<IFormInput>();
   const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
+  const { userData } = useUserData();
 
   useEffect(() => {
     if (status === "unauthenticated") signIn();
   }, [session, status]);
 
-  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+  const onSubmit: SubmitHandler<IFormInput> = async (data: any) => {
     if (data?.name !== "") {
-      const newTypeRef = doc(collection(db, "types"));
-      await setDoc(newTypeRef, data);
+      await addDoc(collection(db, "types"), {
+        name: data.name,
+        timestamp: serverTimestamp(),
+        user_id: doc(db, `users/${userData.id}`),
+      });
       setOpen(true);
     }
   };

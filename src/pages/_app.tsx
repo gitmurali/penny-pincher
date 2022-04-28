@@ -2,7 +2,6 @@ import { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import Header from "../components/Header";
 import Head from "next/head";
-import { createContext } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

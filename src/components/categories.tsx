@@ -6,6 +6,7 @@ import {
   onSnapshot,
   addDoc,
   serverTimestamp,
+  doc,
 } from "firebase/firestore";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { db } from "../../firebase";
@@ -24,6 +25,7 @@ import {
 } from "@mui/material";
 import { useSession } from "next-auth/react";
 import Notification from "./Notification";
+import { useUserData } from "../hooks/useUserData";
 interface IFormInput {
   name: string;
   type_id: string;
@@ -41,6 +43,7 @@ export default function Categories({}: Props) {
     handleSubmit,
   } = useForm<IFormInput>();
   const { data: session, status } = useSession();
+  const { userData } = useUserData();
 
   useEffect(() => {
     fetchTypes();
@@ -51,9 +54,10 @@ export default function Categories({}: Props) {
   };
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    data.type_id = `/types/${data.type_id}`;
     await addDoc(collection(db, "categories"), {
       ...data,
+      type_id: doc(db, `/types/${data.type_id}`),
+      user_id: doc(db, `users/${userData.id}`),
       timestamp: serverTimestamp(),
     });
 
