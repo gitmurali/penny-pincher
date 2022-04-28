@@ -46,8 +46,24 @@ export default function Categories({}: Props) {
   const { userData } = useUserData();
 
   useEffect(() => {
-    fetchTypes();
-  }, []);
+    const fetchTypes = async () => {
+      const typesRef = collection(db, "types");
+      const userRef = doc(db, "users", userData?.id);
+      const q = query(typesRef, where("user_id", "==", userRef));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        setTypes(
+          querySnapshot.docs.map((doc: any) => {
+            return {
+              ...doc.data(),
+              id: doc.id,
+            };
+          })
+        );
+      });
+      return unsubscribe;
+    };
+    userData?.id && fetchTypes();
+  }, [userData]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedType(event.target.value);
@@ -57,27 +73,11 @@ export default function Categories({}: Props) {
     await addDoc(collection(db, "categories"), {
       ...data,
       type_id: doc(db, `/types/${data.type_id}`),
-      user_id: doc(db, `users/${userData.id}`),
+      user_id: doc(db, `users/${userData?.id}`),
       timestamp: serverTimestamp(),
     });
 
     setOpen(true);
-  };
-
-  const fetchTypes = async () => {
-    const typesRef = collection(db, "types");
-    const q = query(typesRef);
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setTypes(
-        querySnapshot.docs.map((doc: any) => {
-          return {
-            ...doc.data(),
-            id: doc.id,
-          };
-        })
-      );
-    });
-    return unsubscribe;
   };
 
   // console.log(selectedType);

@@ -60,8 +60,25 @@ export default function Expenses({}: Props) {
   const { userData } = useUserData();
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    const fetchCategories = async () => {
+      const categoriesRef = collection(db, "categories");
+      const userRef = doc(db, "users", userData.id);
+      const q = query(categoriesRef, where("user_id", "==", userRef));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        setCats(
+          querySnapshot.docs.map((doc: any) => {
+            return {
+              ...doc.data(),
+              id: doc.id,
+            };
+          })
+        );
+      });
+      return unsubscribe;
+    };
+
+    userData?.id && fetchCategories();
+  }, [userData]);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { currency, cat_id, price, quantity } = data;
@@ -69,30 +86,14 @@ export default function Expenses({}: Props) {
       cat_id: doc(db, "categories/" + cat_id),
       currency,
       locale: Locale[currency as keyof typeof Locale],
-      price,
-      quantity,
+      price: +price * +quantity,
+      quantity: +quantity,
       expenseDate: value,
       timestamp: serverTimestamp(),
       user_id: doc(db, `users/${userData.id}`),
     });
 
     setOpen(true);
-  };
-
-  const fetchCategories = async () => {
-    const typesRef = collection(db, "categories");
-    const q = query(typesRef);
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setCats(
-        querySnapshot.docs.map((doc: any) => {
-          return {
-            ...doc.data(),
-            id: doc.id,
-          };
-        })
-      );
-    });
-    return unsubscribe;
   };
 
   return session ? (
