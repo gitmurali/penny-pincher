@@ -53,6 +53,7 @@ export default function Income({}: Props) {
     register,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm<IFormInput>();
   const { data: session } = useSession();
   const { userData } = useUserData();
@@ -62,13 +63,14 @@ export default function Income({}: Props) {
     await addDoc(collection(db, "income"), {
       currency,
       locale: Locale[currency as keyof typeof Locale],
-      amount,
+      amount: +amount,
       date: value,
       timestamp: serverTimestamp(),
       user_id: doc(db, `users/${userData.id}`),
     });
 
     setOpen(true);
+    reset();
   };
 
   return session ? (
