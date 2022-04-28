@@ -7,6 +7,9 @@ import {
   getDocs,
   orderBy,
   query,
+  where,
+  documentId,
+  doc,
 } from "firebase/firestore";
 
 import ExpensesChart from "./ExpensesChart";
@@ -16,19 +19,43 @@ import { Typography } from "@mui/material";
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const [expenses, setExpenses] = useState<any>([]);
+  const [userData, setUserData] = useState<any>();
   const loading = status === "loading";
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const usersRef = collection(db, "users");
+      const usersQuery = query(
+        usersRef,
+        where("email", "==", session?.user?.email)
+      );
+      (await getDocs(usersQuery)).forEach(async (doc) => {
+        setUserData({ id: doc.id, ...doc.data() });
+      });
+    };
+
+    session?.user?.email && fetchUser();
+  }, [session]);
 
   useEffect(() => {
     setExpenses([]);
     const fetchExpenses = async () => {
       const expensesRef = collection(db, "expenses");
-      const q = query(expensesRef, orderBy("expenseDate", "asc"));
+      const userRef = doc(db, "users", userData.id);
+      const q = query(
+        expensesRef,
+        orderBy("expenseDate", "asc"),
+        where("user_id", "==", userRef)
+      );
+
       (await getDocs(q)).forEach(async (doc) => {
         let newItem: any = { id: doc.id, ...doc.data() };
+
         if (newItem?.expenseDate) {
           newItem.expenseDate = doc.data().expenseDate.toDate();
         }
-        if (newItem?.cat_id) {
+
+        if (newItem?.cat_id && newItem.user_id) {
           let category: any = await getDoc(newItem?.cat_id);
           if (category.exists()) {
             newItem.category = { cat_id: category.id, ...category.data() };
@@ -37,8 +64,9 @@ export default function Dashboard() {
         }
       });
     };
-    fetchExpenses();
-  }, []);
+
+    userData?.email && fetchExpenses();
+  }, [userData]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -47,10 +75,21 @@ export default function Dashboard() {
   return (
     <>
       {session ? (
-        <>
-          <ExpensesChart data={expenses} />
-          <ExpensesGrid data={expenses} />
-        </>
+        expenses.length > 0 ? (
+          <>
+            <ExpensesChart data={expenses} />
+            <ExpensesGrid data={expenses} />
+          </>
+        ) : (
+          <Typography
+            variant="h4"
+            align="center"
+            alignItems="center"
+            sx={{ mt: 10 }}
+          >
+            No data to display
+          </Typography>
+        )
       ) : (
         <p>
           <p>You are not permitted to see this page.</p>
