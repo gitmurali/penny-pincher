@@ -43,7 +43,7 @@ export default function Categories({}: Props) {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    // console.log(fetchTypes());
+    fetchTypes();
   }, []);
 
   const handleChange = (event: SelectChangeEvent) => {
