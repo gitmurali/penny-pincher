@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -10,13 +10,23 @@ import {
   Title,
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
+import { Grid, Paper, Button } from "@mui/material";
+import SimpleDialog from "./ui/SimpleModal";
+import DateRangeSelector from "./ui/DateRangeSelector";
+import { barOptions, labels, pieOptions } from "../constants";
 import {
-  Grid,
-  Paper,
-  Typography,
-  Box,
-  toggleButtonClasses,
-} from "@mui/material";
+  collection,
+  doc,
+  endAt,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  startAt,
+  where,
+} from "firebase/firestore";
+import { db } from "../../firebase";
+import { startOfMonth, endOfMonth } from "date-fns";
 
 ChartJS.register(
   ArcElement,
@@ -34,44 +44,52 @@ type Props = {
 };
 
 export default function ExpensesChart({ data, userData }: Props) {
-  const options = {
-    plugins: {
-      maintainAspectRatio: false,
-      legend: {
-        display: false,
-      },
-      title: {
-        display: true,
-        text: "Total expenses",
-      },
-    },
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [dateRange, setDateRange] = React.useState<any>({
+    startDate: startOfMonth(new Date()),
+    endDate: endOfMonth(new Date()),
+  });
+  const [expenses, setExpenses] = useState<any>([]);
+
+  useEffect(() => {
+    const getPieData = async () => {
+      setExpenses([]);
+      const expensesRef = collection(db, "expenses");
+      const userRef = doc(db, "users", userData.id);
+      const q = query(
+        expensesRef,
+        orderBy("expenseDate", "asc"),
+        where("user_id", "==", userRef),
+        where("expenseDate", ">", dateRange.startDate),
+        where("expenseDate", "<", dateRange.endDate)
+      );
+
+      (await getDocs(q)).forEach(async (doc: any) => {
+        let newItem: any = { id: doc.id, ...doc.data() };
+
+        if (newItem?.expenseDate) {
+          newItem.expenseDate = doc.data().expenseDate.toDate();
+        }
+
+        if (newItem?.cat_id && newItem.user_id) {
+          let category: any = await getDoc(newItem?.cat_id);
+          if (category.exists()) {
+            newItem.category = { cat_id: category.id, ...category.data() };
+            setExpenses((prevState: Array<unknown>) => [...prevState, newItem]);
+          }
+        }
+      });
+    };
+    getPieData();
+  }, [dateRange, userData.id]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
   };
-  const barOptions = {
-    plugins: {
-      maintainAspectRatio: false,
-      legend: {
-        display: false,
-      },
-      title: {
-        display: true,
-        text: "Total expenses by Month",
-      },
-    },
+
+  const handleClose = () => {
+    setOpen(false);
   };
-  const labels = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "June",
-    "July",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
 
   const expensesByMonth = () => {
     const totalByMonth: any[] = new Array(11).fill(0);
@@ -88,10 +106,10 @@ export default function ExpensesChart({ data, userData }: Props) {
   };
 
   const pieData = {
-    labels: data.map((item: any) => item.category.name),
+    labels: expenses?.map((item: any) => item.category.name),
     datasets: [
       {
-        data: data.map((item: any) => item.price),
+        data: expenses?.map((item: any) => item.price),
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -119,7 +137,7 @@ export default function ExpensesChart({ data, userData }: Props) {
       {
         label: "Expense",
         data: expensesByMonth(),
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        backgroundColor: "rgba(75, 192, 192, 1)",
       },
     ],
   };
@@ -128,7 +146,17 @@ export default function ExpensesChart({ data, userData }: Props) {
     <Grid container spacing={1} alignItems="center">
       <Grid item xs={4}>
         <Paper elevation={3} sx={{ mt: 3, p: 2 }}>
-          <Pie data={pieData} options={options} style={{ marginTop: 10 }} />
+          <Button variant="contained" sx={{ m: 2 }} onClick={handleClickOpen}>
+            Set Date range
+          </Button>
+          <Pie data={pieData} options={pieOptions} style={{ marginTop: 10 }} />
+          <SimpleDialog
+            open={open}
+            onClose={handleClose}
+            title="Select date range"
+          >
+            <DateRangeSelector open={open} setDateRange={setDateRange} />
+          </SimpleDialog>
         </Paper>
       </Grid>
       <Grid item xs={8}>
