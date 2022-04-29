@@ -13,7 +13,7 @@ import { Bar, Pie } from "react-chartjs-2";
 import { Grid, Paper, Button } from "@mui/material";
 import SimpleDialog from "./ui/SimpleModal";
 import DateRangeSelector from "./ui/DateRangeSelector";
-import { barOptions, labels, pieOptions } from "../constants";
+import { barOptions, labels, pieOptions, random_rgba } from "../constants";
 import {
   collection,
   doc,
@@ -110,22 +110,8 @@ export default function ExpensesChart({ data, userData }: Props) {
     datasets: [
       {
         data: expenses?.map((item: any) => item.price),
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
+        backgroundColor: expenses?.map((item: any) => random_rgba()),
+        borderColor: expenses?.map((item: any) => random_rgba()),
         borderWidth: 1,
       },
     ],
@@ -137,11 +123,12 @@ export default function ExpensesChart({ data, userData }: Props) {
       {
         label: "Expense",
         data: expensesByMonth(),
-        backgroundColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: random_rgba(),
       },
     ],
   };
 
+  console.log(expenses);
   return (
     <Grid container spacing={1} alignItems="center">
       <Grid item xs={4}>
