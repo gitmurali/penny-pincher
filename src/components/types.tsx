@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Container, Grid, TextField, Typography } from "@mui/material";
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase";
 import { signIn, useSession } from "next-auth/react";
 import Notification from "./Notification";
@@ -25,13 +19,8 @@ export default function Types({}: Props) {
     formState: { errors },
     handleSubmit,
   } = useForm<IFormInput>();
-  const { data: session, status } = useSession();
   const [open, setOpen] = useState(false);
   const { userData } = useUserData();
-
-  useEffect(() => {
-    if (status === "unauthenticated") signIn();
-  }, [session, status]);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data: any) => {
     if (data?.name !== "") {
@@ -43,7 +32,8 @@ export default function Types({}: Props) {
       setOpen(true);
     }
   };
-  return session ? (
+
+  return (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <Typography variant="h4" sx={{ mb: 6 }}>
@@ -81,5 +71,5 @@ export default function Types({}: Props) {
         message="Type created successfully"
       />
     </Container>
-  ) : null;
+  );
 }

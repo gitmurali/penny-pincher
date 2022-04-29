@@ -55,7 +55,6 @@ export default function Income({}: Props) {
     handleSubmit,
     reset,
   } = useForm<IFormInput>();
-  const { data: session } = useSession();
   const { userData } = useUserData();
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -73,7 +72,7 @@ export default function Income({}: Props) {
     reset();
   };
 
-  return session ? (
+  return (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <Typography variant="h4" sx={{ mb: 6 }}>
@@ -143,5 +142,5 @@ export default function Income({}: Props) {
         message="Income logged!"
       />
     </Container>
-  ) : null;
+  ); 
 }

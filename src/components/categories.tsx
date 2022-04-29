@@ -42,7 +42,6 @@ export default function Categories({}: Props) {
     formState: { errors },
     handleSubmit,
   } = useForm<IFormInput>();
-  const { data: session, status } = useSession();
   const { userData } = useUserData();
 
   useEffect(() => {
@@ -80,8 +79,7 @@ export default function Categories({}: Props) {
     setOpen(true);
   };
 
-  // console.log(selectedType);
-  return session ? (
+  return (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <Typography variant="h4" sx={{ mb: 6 }}>
@@ -146,5 +144,5 @@ export default function Categories({}: Props) {
         message="Category created successfully"
       />
     </Container>
-  ) : null;
+  );
 }

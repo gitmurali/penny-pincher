@@ -22,5 +22,5 @@ export const useUserData = () => {
     session?.user?.email && fetchUser();
   }, [session]);
 
-  return { userData };
+  return { userData, session };
 };

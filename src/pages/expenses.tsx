@@ -56,7 +56,6 @@ export default function Expenses({}: Props) {
     formState: { errors },
     handleSubmit,
   } = useForm<IFormInput>();
-  const { data: session } = useSession();
   const { userData } = useUserData();
 
   useEffect(() => {
@@ -82,6 +81,7 @@ export default function Expenses({}: Props) {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { currency, cat_id, price, quantity } = data;
+
     await addDoc(collection(db, "expenses"), {
       cat_id: doc(db, "categories/" + cat_id),
       currency,
@@ -96,7 +96,7 @@ export default function Expenses({}: Props) {
     setOpen(true);
   };
 
-  return session ? (
+  return (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <Typography variant="h4" sx={{ mb: 6 }}>
@@ -204,5 +204,5 @@ export default function Expenses({}: Props) {
         message="Expense logged!"
       />
     </Container>
-  ) : null;
+  );
 }

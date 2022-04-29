@@ -99,18 +99,9 @@ export default function Header({}: Props) {
             </div>
           )}
           {!session && (
-            <>
-              <Button variant="outlined" onClick={() => signIn()}>
-                Login
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => router.push("/signup")}
-              >
-                Sign up
-              </Button>
-            </>
+            <Button variant="outlined" onClick={() => signIn()}>
+              Login
+            </Button>
           )}
           <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
             <List className={classes.drawer}>
