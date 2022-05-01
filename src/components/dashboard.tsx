@@ -44,7 +44,7 @@ export default function Dashboard() {
       const userRef = doc(db, "users", userData.id);
       const q = query(
         expensesRef,
-        orderBy("expenseDate", "asc"),
+        orderBy("price", "desc"),
         where("user_id", "==", userRef)
       );
 

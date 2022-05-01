@@ -40,18 +40,5 @@ export const labels = [
 ];
 
 export function random_rgba() {
-  var o = Math.round,
-    r = Math.random,
-    s = 255;
-  return (
-    "rgba(" +
-    o(r() * s) +
-    "," +
-    o(r() * s) +
-    "," +
-    o(r() * s) +
-    "," +
-    r().toFixed(1) +
-    ")"
-  );
+  return `rgb(${[1, 2, 3].map((x) => (Math.random() * 256) | 0)})`;
 }
