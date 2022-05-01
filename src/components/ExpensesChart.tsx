@@ -91,6 +91,19 @@ export default function ExpensesChart({ data, userData }: Props) {
     setOpen(false);
   };
 
+  const incomeByMonth = async () => {
+    const income: any = [];
+    const incomeRef = collection(db, "income");
+    const userRef = doc(db, "users", userData.id);
+    const q = query(incomeRef, where("user_id", "==", userRef));
+
+    (await getDocs(q)).forEach(async (doc: any) => {
+      income.push({ id: doc.id, ...doc.data() });
+    });
+
+    return income;
+  };
+
   const expensesByMonth = () => {
     const totalByMonth: any[] = new Array(11).fill(0);
     if (data) {
