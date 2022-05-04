@@ -4,6 +4,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   orderBy,
   query,
   serverTimestamp,
@@ -69,4 +70,21 @@ export const fetchExpenses = async (userData: any) => {
   );
 
   return newExpenses;
+};
+
+export const fetchTypes = async (userData: any) => {
+  let catTypes: any = [];
+  const typesRef = collection(db, "types");
+  const userRef = doc(db, "users", userData?.id);
+  const q = query(typesRef, where("user_id", "==", userRef));
+  const types = await (await getDocs(q)).docs;
+
+  await Promise.all(
+    types.map(async (doc: any) => {
+      let newItem: any = { id: doc.id, ...doc.data() };
+      catTypes = [...catTypes, newItem];
+    })
+  );
+
+  return catTypes;
 };

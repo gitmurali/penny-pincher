@@ -45,23 +45,7 @@ export default function Categories({}: Props) {
   const { userData } = useUserData();
 
   useEffect(() => {
-    const fetchTypes = async () => {
-      const typesRef = collection(db, "types");
-      const userRef = doc(db, "users", userData?.id);
-      const q = query(typesRef, where("user_id", "==", userRef));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        setTypes(
-          querySnapshot.docs.map((doc: any) => {
-            return {
-              ...doc.data(),
-              id: doc.id,
-            };
-          })
-        );
-      });
-      return unsubscribe;
-    };
-    userData?.id && fetchTypes();
+    // userData?.id && fetchTypes();
   }, [userData]);
 
   const handleChange = (event: SelectChangeEvent) => {
