@@ -6,10 +6,12 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import { fetchTypes } from "../utils";
 
-type Props = {};
+type Props = {
+  types: any;
+};
 
-export default function CategoryPage({}: Props) {
-  return <Categories />;
+export default function CategoryPage({ types }: Props) {
+  return <Categories types={types} />;
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -35,8 +37,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   });
 
   const types = await fetchTypes(userData);
-  console.log(123, types);
+
   return {
-    props: {},
+    props: {
+      types: JSON.stringify(types),
+    },
   };
 };

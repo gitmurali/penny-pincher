@@ -141,7 +141,6 @@ export default function ExpensesChart({ data, userData }: Props) {
     ],
   };
 
-  console.log(expenses);
   return (
     <Grid container spacing={1} alignItems="center">
       <Grid item xs={4}>

@@ -1,13 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  addDoc,
-  serverTimestamp,
-  doc,
-} from "firebase/firestore";
+import React, { useState } from "react";
+import { collection, addDoc, serverTimestamp, doc } from "firebase/firestore";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { db } from "../../firebase";
 import {
@@ -15,27 +7,23 @@ import {
   Container,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
-  Select,
-  SelectChangeEvent,
   TextField,
   Typography,
-  Snackbar,
 } from "@mui/material";
-import { useSession } from "next-auth/react";
 import Notification from "./Notification";
 import { useUserData } from "../hooks/useUserData";
+
 interface IFormInput {
   name: string;
   type_id: string;
 }
 
-type Props = {};
+type Props = {
+  types: any;
+};
 
-export default function Categories({}: Props) {
-  const [types, setTypes] = useState<any>([]);
-  const [selectedType, setSelectedType] = useState("");
+export default function Categories({ types }: Props) {
   const [open, setOpen] = useState(false);
   const {
     register,
@@ -43,14 +31,6 @@ export default function Categories({}: Props) {
     handleSubmit,
   } = useForm<IFormInput>();
   const { userData } = useUserData();
-
-  useEffect(() => {
-    // userData?.id && fetchTypes();
-  }, [userData]);
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedType(event.target.value);
-  };
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     await addDoc(collection(db, "categories"), {
@@ -83,7 +63,7 @@ export default function Categories({}: Props) {
                 error={errors.type_id ? true : false}
                 helperText={errors.type_id?.message}
               >
-                {types?.map((type: any) => {
+                {JSON.parse(types)?.map((type: any) => {
                   return (
                     <MenuItem key={type.id} value={type.id}>
                       {type.name}
