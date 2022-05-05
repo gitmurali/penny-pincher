@@ -2,8 +2,6 @@ import React from "react";
 import Categories from "../components/categories";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../firebase";
 import { fetchTypes, fetchUser } from "../utils";
 import { Session } from "next-auth/core/types";
 
