@@ -1,13 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  addDoc,
-  doc,
-  serverTimestamp,
-} from "firebase/firestore";
+import React, { useState } from "react";
+import { collection, addDoc, doc, serverTimestamp } from "firebase/firestore";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { db } from "../../firebase";
 import {
@@ -15,15 +7,10 @@ import {
   Container,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
-  Select,
-  SelectChangeEvent,
   TextField,
   Typography,
-  Snackbar,
 } from "@mui/material";
-import { useSession } from "next-auth/react";
 import Notification from "../components/Notification";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -48,7 +35,6 @@ const Locale = {
 export default function Income({}: Props) {
   const [value, setValue] = useState<Date | null>();
   const [open, setOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState("");
   const {
     register,
     formState: { errors },
@@ -85,7 +71,6 @@ export default function Income({}: Props) {
                 select
                 fullWidth
                 label="Select Type"
-                defaultValue={selectedType}
                 inputProps={register("currency", {
                   required: "Please select type",
                 })}
@@ -142,5 +127,5 @@ export default function Income({}: Props) {
         message="Income logged!"
       />
     </Container>
-  ); 
+  );
 }

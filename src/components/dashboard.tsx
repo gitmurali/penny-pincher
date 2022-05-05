@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { signIn, useSession, getSession } from "next-auth/react";
+import React from "react";
+import { signIn, useSession } from "next-auth/react";
 import ExpensesChart from "./ExpensesChart";
 import ExpensesGrid from "./ExpensesGrid";
 import { Typography } from "@mui/material";
