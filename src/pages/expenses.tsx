@@ -1,15 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GetServerSideProps } from "next";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  addDoc,
-  doc,
-  serverTimestamp,
-  getDocs,
-} from "firebase/firestore";
+import { collection, addDoc, doc, serverTimestamp } from "firebase/firestore";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { db } from "../../firebase";
 import {
@@ -17,13 +8,9 @@ import {
   Container,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
-  Select,
-  SelectChangeEvent,
   TextField,
   Typography,
-  Snackbar,
 } from "@mui/material";
 import Notification from "../components/Notification";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
@@ -55,7 +42,6 @@ const Locale = {
 export default function Expenses({ cats }: Props) {
   const [value, setValue] = useState<Date | null>();
   const [open, setOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState("");
   const {
     register,
     formState: { errors },
@@ -92,7 +78,6 @@ export default function Expenses({ cats }: Props) {
                 select
                 fullWidth
                 label="Select Type"
-                defaultValue={selectedType}
                 inputProps={register("currency", {
                   required: "Please select type",
                 })}
