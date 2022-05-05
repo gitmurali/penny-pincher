@@ -33,7 +33,6 @@ import { useUserData } from "../hooks/useUserData";
 import { fetchExpenseCategories, fetchUser } from "../utils";
 import { getSession } from "next-auth/react";
 import { Session } from "next-auth/core/types";
-import { CommentBankTwoTone } from "@mui/icons-material";
 
 interface IFormInput {
   price: string;
@@ -43,7 +42,9 @@ interface IFormInput {
   expenseDate: Date | null;
 }
 
-type Props = {};
+type Props = {
+  cats: any;
+};
 
 const Locale = {
   GBP: "en-GB",
@@ -117,7 +118,7 @@ export default function Expenses({ cats }: Props) {
                 error={errors.cat_id ? true : false}
                 helperText={errors.cat_id?.message}
               >
-                {cats.map((cat: any) => (
+                {JSON.parse(cats).map((cat: any) => (
                   <MenuItem value={cat.id} key={cat.id}>
                     {cat.name}
                   </MenuItem>
