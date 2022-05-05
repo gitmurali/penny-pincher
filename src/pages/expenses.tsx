@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
 import {
   collection,
   query,
@@ -7,6 +8,7 @@ import {
   addDoc,
   doc,
   serverTimestamp,
+  getDocs,
 } from "firebase/firestore";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { db } from "../../firebase";
@@ -23,12 +25,15 @@ import {
   Typography,
   Snackbar,
 } from "@mui/material";
-import { useSession } from "next-auth/react";
 import Notification from "../components/Notification";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useUserData } from "../hooks/useUserData";
+import { fetchExpenseCategories, fetchUser } from "../utils";
+import { getSession } from "next-auth/react";
+import { Session } from "next-auth/core/types";
+import { CommentBankTwoTone } from "@mui/icons-material";
 
 interface IFormInput {
   price: string;
@@ -46,8 +51,7 @@ const Locale = {
   INR: "en-IN",
 };
 
-export default function Expenses({}: Props) {
-  const [cats, setCats] = useState<any>([]);
+export default function Expenses({ cats }: Props) {
   const [value, setValue] = useState<Date | null>();
   const [open, setOpen] = useState(false);
   const [selectedType, setSelectedType] = useState("");
@@ -58,30 +62,8 @@ export default function Expenses({}: Props) {
   } = useForm<IFormInput>();
   const { userData } = useUserData();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const categoriesRef = collection(db, "categories");
-      const userRef = doc(db, "users", userData.id);
-      const q = query(categoriesRef, where("user_id", "==", userRef));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        setCats(
-          querySnapshot.docs.map((doc: any) => {
-            return {
-              ...doc.data(),
-              id: doc.id,
-            };
-          })
-        );
-      });
-      return unsubscribe;
-    };
-
-    userData?.id && fetchCategories();
-  }, [userData]);
-
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { currency, cat_id, price, quantity } = data;
-
     await addDoc(collection(db, "expenses"), {
       cat_id: doc(db, "categories/" + cat_id),
       currency,
@@ -206,3 +188,22 @@ export default function Expenses({}: Props) {
     </Container>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { res } = ctx;
+
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59"
+  );
+
+  const session: Session | null = await getSession(ctx);
+  const userData = await fetchUser(session?.user?.email as string);
+  const cats = await fetchExpenseCategories(userData);
+
+  return {
+    props: {
+      cats: JSON.stringify(cats),
+    },
+  };
+};

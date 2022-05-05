@@ -31,6 +31,23 @@ export const initUser = async (email: string) => {
     }));
 };
 
+export const fetchExpenseCategories = async (userData: any) => {
+  let categories: any = [];
+  const categoriesRef = collection(db, "categories");
+  const userRef = doc(db, "users", userData.id);
+  const q = query(categoriesRef, where("user_id", "==", userRef));
+  const cats = await (await getDocs(q)).docs;
+
+  await Promise.all(
+    cats.map(async (doc: any) => {
+      let newItem: any = { id: doc.id, ...doc.data() };
+      categories = [...categories, newItem];
+    })
+  );
+
+  return categories;
+};
+
 export const fetchCategories = async (newItem: any) => {
   let category: any = await getDoc(newItem?.cat_id);
 
