@@ -4,7 +4,8 @@ import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
-import { fetchTypes } from "../utils";
+import { fetchTypes, fetchUser } from "../utils";
+import { Session } from "next-auth/core/types";
 
 type Props = {
   types: any;
@@ -22,20 +23,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     "public, s-maxage=10, stale-while-revalidate=59"
   );
 
-  const session = await getSession(ctx);
-  let userData: any;
-
-  const usersRef = collection(db, "users");
-
-  const usersQuery = query(
-    usersRef,
-    where("email", "==", session?.user?.email)
-  );
-
-  (await getDocs(usersQuery)).forEach(async (doc) => {
-    userData = { id: doc.id, ...doc.data() };
-  });
-
+  const session: Session | null = await getSession(ctx);
+  const userData = await fetchUser(session?.user?.email as string);
   const types = await fetchTypes(userData);
 
   return {
