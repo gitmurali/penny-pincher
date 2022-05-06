@@ -1,4 +1,3 @@
-import { collection } from "firebase/firestore";
 import React, { useEffect } from "react";
 import { useUserData } from "../hooks/useUserData";
 import { initUser } from "../utils";
