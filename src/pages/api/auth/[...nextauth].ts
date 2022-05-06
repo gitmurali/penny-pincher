@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import nextAuth from "next-auth";
+import googleProvider from "next-auth/providers/google";
 
-export default NextAuth({
+export default nextAuth({
   providers: [
-    GoogleProvider({
+    googleProvider({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string,
     }),

@@ -13,16 +13,19 @@ import { Bar, Pie } from "react-chartjs-2";
 import { Grid, Paper, Button } from "@mui/material";
 import SimpleDialog from "./ui/SimpleModal";
 import DateRangeSelector from "./ui/DateRangeSelector";
-import { barOptions, labels, pieOptions, random_rgba } from "../constants";
+import {
+  barOptions,
+  labels,
+  pieOptions,
+  random_rgba as randomRGBA,
+} from "../constants";
 import {
   collection,
   doc,
-  endAt,
   getDoc,
   getDocs,
   orderBy,
   query,
-  startAt,
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -65,14 +68,14 @@ export default function ExpensesChart({ data, userData }: Props) {
       );
 
       (await getDocs(q)).forEach(async (doc: any) => {
-        let newItem: any = { id: doc.id, ...doc.data() };
+        const newItem: any = { id: doc.id, ...doc.data() };
 
         if (newItem?.expenseDate) {
           newItem.expenseDate = doc.data().expenseDate.toDate();
         }
 
         if (newItem?.cat_id && newItem.user_id) {
-          let category: any = await getDoc(newItem?.cat_id);
+          const category: any = await getDoc(newItem?.cat_id);
           if (category.exists()) {
             newItem.category = { cat_id: category.id, ...category.data() };
             setExpenses((prevState: Array<unknown>) => [...prevState, newItem]);
@@ -91,18 +94,18 @@ export default function ExpensesChart({ data, userData }: Props) {
     setOpen(false);
   };
 
-  const incomeByMonth = async () => {
-    const income: any = [];
-    const incomeRef = collection(db, "income");
-    const userRef = doc(db, "users", userData.id);
-    const q = query(incomeRef, where("user_id", "==", userRef));
+  // const incomeByMonth = async () => {
+  //   const income: any = [];
+  //   const incomeRef = collection(db, "income");
+  //   const userRef = doc(db, "users", userData.id);
+  //   const q = query(incomeRef, where("user_id", "==", userRef));
 
-    (await getDocs(q)).forEach(async (doc: any) => {
-      income.push({ id: doc.id, ...doc.data() });
-    });
+  //   (await getDocs(q)).forEach(async (doc: any) => {
+  //     income.push({ id: doc.id, ...doc.data() });
+  //   });
 
-    return income;
-  };
+  //   return income;
+  // };
 
   const expensesByMonth = () => {
     const totalByMonth: any[] = new Array(11).fill(0);
@@ -123,8 +126,8 @@ export default function ExpensesChart({ data, userData }: Props) {
     datasets: [
       {
         data: expenses?.map((item: any) => item.price),
-        backgroundColor: expenses?.map((item: any) => random_rgba()),
-        borderColor: expenses?.map((item: any) => random_rgba()),
+        backgroundColor: expenses?.map((item: any) => randomRGBA()),
+        borderColor: expenses?.map((item: any) => randomRGBA()),
         borderWidth: 1,
       },
     ],
@@ -136,7 +139,7 @@ export default function ExpensesChart({ data, userData }: Props) {
       {
         label: "Expense",
         data: expensesByMonth(),
-        backgroundColor: random_rgba(),
+        backgroundColor: randomRGBA(),
       },
     ],
   };

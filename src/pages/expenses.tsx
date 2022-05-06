@@ -50,9 +50,9 @@ export default function Expenses({ cats }: Props) {
   const { userData } = useUserData();
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const { currency, cat_id, price, quantity } = data;
+    const { currency, cat_id: catId, price, quantity } = data;
     await addDoc(collection(db, "expenses"), {
-      cat_id: doc(db, "categories/" + cat_id),
+      cat_id: doc(db, "categories/" + catId),
       currency,
       locale: Locale[currency as keyof typeof Locale],
       price: +price * +quantity,
