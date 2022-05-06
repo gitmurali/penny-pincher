@@ -53,7 +53,6 @@ export default function Income({}: Props) {
       timestamp: serverTimestamp(),
       user_id: doc(db, `users/${userData.id}`),
     });
-
     setOpen(true);
     reset();
   };

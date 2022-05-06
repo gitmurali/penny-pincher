@@ -38,7 +38,7 @@ export default function Header({}: Props) {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleMenu = (event: any) => {

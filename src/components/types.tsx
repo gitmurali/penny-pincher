@@ -3,7 +3,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, Container, Grid, TextField, Typography } from "@mui/material";
 import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase";
-import { signIn, useSession } from "next-auth/react";
 import Notification from "./Notification";
 import { useUserData } from "../hooks/useUserData";
 

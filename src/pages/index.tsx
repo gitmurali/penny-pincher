@@ -21,10 +21,12 @@ export default function Home({ data }: any) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res } = ctx;
+  
   res.setHeader(
     "Cache-Control",
     "public, s-maxage=10, stale-while-revalidate=59"
   );
+  
   const session: Session | null = await getSession(ctx);
   const userData = await fetchUser(session?.user?.email as string);
   const expenses = await fetchExpenses(userData);

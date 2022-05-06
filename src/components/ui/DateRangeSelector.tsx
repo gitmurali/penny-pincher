@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  DateRangePicker,
-  DateRange,
-} from "@matharumanpreet00/react-daterange-picker";
+import { DateRangePicker } from "@matharumanpreet00/react-daterange-picker";
 
 type Props = {
   open: boolean;
