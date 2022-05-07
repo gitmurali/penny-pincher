@@ -9,7 +9,7 @@ export default function Home({ data }: any) {
     <div>
       <main>
         <Dashboard
-          expenses={JSON.parse(data.expenses)}
+          expenses={data.expenses ? JSON.parse(data.expenses) : []}
           userData={data.userData}
         />
       </main>
@@ -19,6 +19,8 @@ export default function Home({ data }: any) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res } = ctx;
+  let expenses = [];
+  let userData = null;
 
   res.setHeader(
     "Cache-Control",
@@ -26,13 +28,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   );
 
   const session: Session | null = await getSession(ctx);
-  const userData = await fetchUser(session?.user?.email as string);
-  const expenses = await fetchExpenses(userData);
+
+  if (session) {
+    userData = await fetchUser(session?.user?.email as string);
+    expenses = await fetchExpenses(userData);
+  }
 
   return {
     props: {
       data: {
-        expenses: JSON.stringify(expenses),
+        expenses: expenses ? JSON.stringify(expenses) : [],
         userData,
       },
     },
