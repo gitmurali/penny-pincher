@@ -1,40 +1,59 @@
 import React from "react";
+
 import { signIn, useSession } from "next-auth/react";
 import ExpensesChart from "./ExpensesChart";
 import ExpensesGrid from "./ExpensesGrid";
-import { Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
-const Dashboard = ({ expenses, userData }: any) => {
+const Dashboard = ({ expenses, userData, loading }: any) => {
   const { data: session, status } = useSession();
-  const loading = status === "loading";
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  const isSessionLoading = status === "loading";
 
   return (
     <>
       {session ? (
-        expenses.length > 0 ? (
+        isSessionLoading || loading ? (
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            marginTop={4}
+          >
+            <Grid item>
+              <Box sx={{ display: "flex" }}>
+                <CircularProgress size="8rem" />
+              </Box>
+              <Typography
+                variant="h4"
+                align="center"
+                alignItems="center"
+                sx={{ mt: 10 }}
+              >
+                Loaidng your app..
+              </Typography>
+            </Grid>
+          </Grid>
+        ) : expenses.length > 0 ? (
           <>
             <ExpensesChart data={expenses} userData={userData} />
             <ExpensesGrid data={expenses} />
           </>
-        ) : (
+        ) : null
+      ) : (
+        <>
           <Typography
-            variant="h4"
+            variant="h5"
             align="center"
             alignItems="center"
             sx={{ mt: 10 }}
           >
-            No data to display
+            You are not permitted to see this page.
           </Typography>
-        )
-      ) : (
-        <p>
-          <p>You are not permitted to see this page.</p>
           <button onClick={() => signIn()}>Sign in</button>
-        </p>
+        </>
       )}
     </>
   );

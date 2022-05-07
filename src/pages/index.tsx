@@ -8,24 +8,27 @@ export default function Home({}: any) {
   const { data: session } = useSession();
   const [expenses, setExpenses] = useState<any[]>([]);
   const [user, setUser] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
       if (session) {
+        setLoading(true);
         const userData = await fetchUser(session?.user?.email as string);
         const exps = await fetchExpenses(userData);
         setExpenses(exps);
         setUser(userData);
+        setLoading(false);
       }
     }
 
-    session && fetchData();
-  }, [session]);
+    session?.user?.email && fetchData();
+  }, [session?.user?.email]);
 
   return (
     <div>
       <main>
-        <Dashboard expenses={expenses} userData={user} />
+        <Dashboard expenses={expenses} userData={user} loading={loading} />
       </main>
     </div>
   );
