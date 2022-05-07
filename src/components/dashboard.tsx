@@ -1,6 +1,6 @@
 import React from "react";
 
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import ExpensesChart from "./ExpensesChart";
 import ExpensesGrid from "./ExpensesGrid";
 import { Grid, Typography } from "@mui/material";
@@ -10,51 +10,37 @@ import Box from "@mui/material/Box";
 const Dashboard = ({ expenses, userData, loading }: any) => {
   const { data: session, status } = useSession();
   const isSessionLoading = status === "loading";
-
+  console.log(session);
   return (
     <>
-      {session ? (
-        isSessionLoading || loading ? (
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            marginTop={4}
-          >
-            <Grid item>
-              <Box sx={{ display: "flex" }}>
-                <CircularProgress size="8rem" />
-              </Box>
-              <Typography
-                variant="h4"
-                align="center"
-                alignItems="center"
-                sx={{ mt: 10 }}
-              >
-                Loaidng your app..
-              </Typography>
-            </Grid>
+      {isSessionLoading || loading ? (
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          marginTop={4}
+        >
+          <Grid item>
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress size="8rem" />
+            </Box>
+            <Typography
+              variant="h4"
+              align="center"
+              alignItems="center"
+              sx={{ mt: 10 }}
+            >
+              Loaidng your app..
+            </Typography>
           </Grid>
-        ) : expenses.length > 0 ? (
-          <>
-            <ExpensesChart data={expenses} userData={userData} />
-            <ExpensesGrid data={expenses} />
-          </>
-        ) : null
-      ) : (
+        </Grid>
+      ) : expenses.length > 0 ? (
         <>
-          <Typography
-            variant="h5"
-            align="center"
-            alignItems="center"
-            sx={{ mt: 10 }}
-          >
-            You are not permitted to see this page.
-          </Typography>
-          <button onClick={() => signIn()}>Sign in</button>
+          <ExpensesChart data={expenses} userData={userData} />
+          <ExpensesGrid data={expenses} />
         </>
-      )}
+      ) : null}
     </>
   );
 };

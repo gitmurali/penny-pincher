@@ -94,17 +94,19 @@ export const fetchExpenses = async (userData: any) => {
 
 export const fetchTypes = async (userData: any) => {
   let catTypes: any = [];
-  const typesRef = collection(db, "types");
-  const userRef = doc(db, "users", userData?.id);
-  const q = query(typesRef, where("user_id", "==", userRef));
-  const types = await (await getDocs(q)).docs;
+  if (userData) {
+    const typesRef = collection(db, "types");
+    const userRef = doc(db, "users", userData?.id);
+    const q = query(typesRef, where("user_id", "==", userRef));
+    const types = await(await getDocs(q)).docs;
 
-  await Promise.all(
-    types.map(async (doc: any) => {
-      const newItem: any = { id: doc.id, ...doc.data() };
-      catTypes = [...catTypes, newItem];
-    })
-  );
+    await Promise.all(
+      types.map(async (doc: any) => {
+        const newItem: any = { id: doc.id, ...doc.data() };
+        catTypes = [...catTypes, newItem];
+      })
+    );
 
-  return catTypes;
+    return catTypes;
+  }
 };

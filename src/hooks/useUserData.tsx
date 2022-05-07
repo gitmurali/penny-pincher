@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { db } from "../../firebase";
 
 export const useUserData = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [userData, setUserData] = useState<any>();
 
   useEffect(() => {
