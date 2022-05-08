@@ -67,7 +67,7 @@ export const fetchExpenses = async (userData: any) => {
 
     const q = query(
       expensesRef,
-      orderBy("price", "desc"),
+      orderBy("timestamp", "desc"),
       where("user_id", "==", userRef)
     );
 
