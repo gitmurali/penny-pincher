@@ -1,26 +1,22 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import { db } from "../../firebase";
+import { fetchUser } from "../utils";
 
 export const useUserData = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [userData, setUserData] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const isSessionLoading = status === "loading";
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const usersRef = collection(db, "users");
-      const usersQuery = query(
-        usersRef,
-        where("email", "==", session?.user?.email)
-      );
-      (await getDocs(usersQuery)).forEach(async (doc) => {
-        setUserData({ id: doc.id, ...doc.data() });
-      });
-    };
-
-    session?.user?.email && fetchUser();
+    async function getUser() {
+      setLoading(true);
+      const user = await fetchUser(session?.user?.email as string);
+      setLoading(false);
+      setUserData(user);
+    }
+    session?.user?.email && getUser();
   }, [session]);
 
-  return { userData, session };
+  return { userData, session, loading, isSessionLoading };
 };
