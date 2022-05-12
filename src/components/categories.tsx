@@ -46,12 +46,12 @@ export default function Categories({ types }: Props) {
   return (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-        <Typography variant="h4" sx={{ mb: 6 }}>
+        <Typography variant="h4" sx={{ mb: 4 }}>
           Create Categories
         </Typography>
         <Grid container spacing={4} direction="column">
           <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+            <FormControl sx={{ minWidth: 200 }}>
               <TextField
                 select
                 fullWidth
@@ -95,11 +95,10 @@ export default function Categories({ types }: Props) {
               })}
             />
           </Grid>
-
-          <Button variant="contained" type="submit" sx={{ m: 2 }}>
-            Create Category
-          </Button>
         </Grid>
+        <Button variant="contained" type="submit" sx={{ mt: 2 }} fullWidth>
+          Create Category
+        </Button>
       </form>
       <Notification
         open={open}
