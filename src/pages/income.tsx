@@ -60,12 +60,12 @@ export default function Income({}: Props) {
   return (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-        <Typography variant="h4" sx={{ mb: 6 }}>
+        <Typography variant="h4" sx={{ mb: 4 }}>
           Create an Income
         </Typography>
         <Grid container spacing={4} direction="column">
           <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 200 }} size="medium">
+            <FormControl sx={{ minWidth: 200 }} size="medium">
               <TextField
                 select
                 fullWidth
@@ -114,10 +114,10 @@ export default function Income({}: Props) {
               })}
             />
           </Grid>
-          <Button variant="contained" type="submit" sx={{ m: 2 }}>
-            Create an Income
-          </Button>
         </Grid>
+        <Button variant="contained" type="submit" sx={{ mt: 2 }} fullWidth>
+          Create an Income
+        </Button>
       </form>
       <Notification
         open={open}

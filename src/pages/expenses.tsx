@@ -68,12 +68,12 @@ export default function Expenses({ cats }: Props) {
   return (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-        <Typography variant="h4" sx={{ mb: 6 }}>
+        <Typography variant="h4" sx={{ mb: 4 }}>
           Create an Expense
         </Typography>
         <Grid container spacing={4} direction="column">
           <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 200 }} size="medium">
+            <FormControl sx={{ minWidth: 200 }} size="medium">
               <TextField
                 select
                 fullWidth
@@ -91,7 +91,7 @@ export default function Expenses({ cats }: Props) {
             </FormControl>
           </Grid>
           <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 200 }} size="medium">
+            <FormControl sx={{ minWidth: 200 }} size="medium">
               <TextField
                 select
                 fullWidth
@@ -160,10 +160,10 @@ export default function Expenses({ cats }: Props) {
               })}
             />
           </Grid>
-          <Button variant="contained" type="submit" sx={{ m: 2 }}>
-            Create an expense
-          </Button>
         </Grid>
+        <Button variant="contained" type="submit" sx={{ mt: 2 }} fullWidth>
+          Create an expense
+        </Button>
       </form>
       <Notification
         open={open}

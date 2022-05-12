@@ -35,7 +35,7 @@ export default function Types({}: Props) {
   return (
     <Container maxWidth="md" sx={{ marginTop: 12 }}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-        <Typography variant="h4" sx={{ mb: 6 }}>
+        <Typography variant="h4" sx={{ mb: 4 }}>
           Create types
         </Typography>
         <Grid container spacing={4} direction="column">
