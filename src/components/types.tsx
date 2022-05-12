@@ -57,11 +57,10 @@ export default function Types({}: Props) {
               })}
             />
           </Grid>
-
-          <Button variant="contained" type="submit" sx={{ m: 2 }}>
-            Create Type
-          </Button>
         </Grid>
+        <Button variant="contained" type="submit" sx={{ mt: 2 }} fullWidth>
+          Create Type
+        </Button>
       </form>
       <Notification
         open={open}
