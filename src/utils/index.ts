@@ -97,7 +97,11 @@ export const fetchTypes = async (userData: any) => {
   if (userData) {
     const typesRef = collection(db, "types");
     const userRef = doc(db, "users", userData?.id);
-    const q = query(typesRef, where("user_id", "==", userRef));
+    const q = query(
+      typesRef,
+      orderBy("name", "asc"),
+      where("user_id", "==", userRef)
+    );
     const types = await(await getDocs(q)).docs;
 
     await Promise.all(
