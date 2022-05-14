@@ -36,7 +36,11 @@ export const fetchExpenseCategories = async (userData: any) => {
   let categories: any = [];
   const categoriesRef = collection(db, "categories");
   const userRef = doc(db, "users", userData.id);
-  const q = query(categoriesRef, where("user_id", "==", userRef));
+  const q = query(
+    categoriesRef,
+    orderBy("name", "asc"),
+    where("user_id", "==", userRef)
+  );
   const cats = await (await getDocs(q)).docs;
 
   await Promise.all(
