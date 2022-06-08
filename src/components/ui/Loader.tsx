@@ -22,7 +22,7 @@ export default function Loader({}: Props) {
           alignItems="center"
           sx={{ mt: 10 }}
         >
-          Loaidng your app..
+          Loading your app..
         </Typography>
       </Grid>
     </Grid>
